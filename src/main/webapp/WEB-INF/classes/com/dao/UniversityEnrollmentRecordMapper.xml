@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.UniversityEnrollmentRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.model.UniversityEnrollmentRecord" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="STUDENT_NUM" property="studentNum" jdbcType="VARCHAR" />
+    <result column="STUDENT_NAME" property="studentName" jdbcType="VARCHAR" />
+    <result column="STUDENT_REGION" property="studentRegion" jdbcType="BIGINT" />
+    <result column="SCORE" property="score" jdbcType="INTEGER" />
+    <result column="UNIVERSITY_ID" property="universityId" jdbcType="BIGINT" />
+    <result column="UNIVERSITY_NAME" property="universityName" jdbcType="VARCHAR" />
+    <result column="UNIVERSITY_REGION_ID" property="universityRegionId" jdbcType="BIGINT" />
+    <result column="MAJOR_ID" property="majorId" jdbcType="BIGINT" />
+    <result column="MAJOR_NAME" property="majorName" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="TINYINT" />
+    <result column="YEAR" property="year" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED" property="created" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED" property="updated" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, STUDENT_NUM, STUDENT_NAME, STUDENT_REGION, SCORE, UNIVERSITY_ID, UNIVERSITY_NAME, 
+    UNIVERSITY_REGION_ID, MAJOR_ID, MAJOR_NAME, TYPE, YEAR, CREATE_TIME, CREATED, UPDATE_TIME, 
+    UPDATED
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from university_enrollment_record
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectEnrollmentRecordList"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from university_enrollment_record
+  </select>
+  
+  <select id="selectByCondition"  parameterType="com.model.UniversityEnrollmentRecord" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from university_enrollment_record
+    <include refid="QUERY_WHERE_CLAUSE_CONDITION"/>
+    order by SCORE
+  </select>
+
+  <select id="selectUniversityEnrollmentInYear" resultType="com.vo.EnrollmentSearchVO" parameterType="com.model.UniversityEnrollmentRecord">
+    select
+    UNIVERSITY_ID as universityId,UNIVERSITY_NAME as universityName
+    from university_enrollment_record
+    WHERE  1=1
+    <if test="studentRegion != null and studentRegion != ''"><![CDATA[AND `STUDENT_REGION` = #{studentRegion}]]></if>
+    <if test="universityId != null and universityId != ''"> <![CDATA[AND UNIVERSITY_ID =#{universityId}]]></if>
+    <if test="year !=null ">
+      and YEAR =#{year}
+    </if>
+    <if test="type !=null ">
+      and TYPE =#{type}
+    </if>
+    GROUP BY  UNIVERSITY_ID,UNIVERSITY_NAME
+  </select>
+
+  <select id="selectScoreByStudentRegionAndUniversityIdAndTypeAndYear"  parameterType="com.model.UniversityEnrollmentRecord"  resultType="com.vo.ScoreDistributionVO">
+    select MAX(SCORE) AS maxScore,AVG(SCORE) AS  avgScore,MIN(SCORE) AS  minScore from university_enrollment_record
+    where STUDENT_REGION=#{studentRegion} and UNIVERSITY_ID=#{universityId} and TYPE=#{type} and `YEAR`=#{year}
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from university_enrollment_record
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.model.UniversityEnrollmentRecord" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into university_enrollment_record (STUDENT_NUM, STUDENT_NAME, STUDENT_REGION, 
+      SCORE, UNIVERSITY_ID, UNIVERSITY_NAME, 
+      UNIVERSITY_REGION_ID, MAJOR_ID, MAJOR_NAME, 
+      TYPE, YEAR, CREATE_TIME, 
+      CREATED, UPDATE_TIME, UPDATED
+      )
+    values (#{studentNum,jdbcType=VARCHAR}, #{studentName,jdbcType=VARCHAR}, #{studentRegion,jdbcType=BIGINT}, 
+      #{score,jdbcType=INTEGER}, #{universityId,jdbcType=BIGINT}, #{universityName,jdbcType=VARCHAR}, 
+      #{universityRegionId,jdbcType=BIGINT}, #{majorId,jdbcType=BIGINT}, #{majorName,jdbcType=VARCHAR}, 
+      #{type,jdbcType=TINYINT}, #{year,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{created,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updated,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.UniversityEnrollmentRecord" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into university_enrollment_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="studentNum != null" >
+        STUDENT_NUM,
+      </if>
+      <if test="studentName != null" >
+        STUDENT_NAME,
+      </if>
+      <if test="studentRegion != null" >
+        STUDENT_REGION,
+      </if>
+      <if test="score != null" >
+        SCORE,
+      </if>
+      <if test="universityId != null" >
+        UNIVERSITY_ID,
+      </if>
+      <if test="universityName != null" >
+        UNIVERSITY_NAME,
+      </if>
+      <if test="universityRegionId != null" >
+        UNIVERSITY_REGION_ID,
+      </if>
+      <if test="majorId != null" >
+        MAJOR_ID,
+      </if>
+      <if test="majorName != null" >
+        MAJOR_NAME,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="year != null" >
+        YEAR,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="updated != null" >
+        UPDATED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="studentNum != null" >
+        #{studentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentName != null" >
+        #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentRegion != null" >
+        #{studentRegion,jdbcType=BIGINT},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="universityId != null" >
+        #{universityId,jdbcType=BIGINT},
+      </if>
+      <if test="universityName != null" >
+        #{universityName,jdbcType=VARCHAR},
+      </if>
+      <if test="universityRegionId != null" >
+        #{universityRegionId,jdbcType=BIGINT},
+      </if>
+      <if test="majorId != null" >
+        #{majorId,jdbcType=BIGINT},
+      </if>
+      <if test="majorName != null" >
+        #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.UniversityEnrollmentRecord" >
+    update university_enrollment_record
+    <set >
+      <if test="studentNum != null" >
+        STUDENT_NUM = #{studentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentName != null" >
+        STUDENT_NAME = #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentRegion != null" >
+        STUDENT_REGION = #{studentRegion,jdbcType=BIGINT},
+      </if>
+      <if test="score != null" >
+        SCORE = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="universityId != null" >
+        UNIVERSITY_ID = #{universityId,jdbcType=BIGINT},
+      </if>
+      <if test="universityName != null" >
+        UNIVERSITY_NAME = #{universityName,jdbcType=VARCHAR},
+      </if>
+      <if test="universityRegionId != null" >
+        UNIVERSITY_REGION_ID = #{universityRegionId,jdbcType=BIGINT},
+      </if>
+      <if test="majorId != null" >
+        MAJOR_ID = #{majorId,jdbcType=BIGINT},
+      </if>
+      <if test="majorName != null" >
+        MAJOR_NAME = #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="year != null" >
+        YEAR = #{year,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        UPDATED = #{updated,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.UniversityEnrollmentRecord" >
+    update university_enrollment_record
+    set STUDENT_NUM = #{studentNum,jdbcType=VARCHAR},
+      STUDENT_NAME = #{studentName,jdbcType=VARCHAR},
+      STUDENT_REGION = #{studentRegion,jdbcType=BIGINT},
+      SCORE = #{score,jdbcType=INTEGER},
+      UNIVERSITY_ID = #{universityId,jdbcType=BIGINT},
+      UNIVERSITY_NAME = #{universityName,jdbcType=VARCHAR},
+      UNIVERSITY_REGION_ID = #{universityRegionId,jdbcType=BIGINT},
+      MAJOR_ID = #{majorId,jdbcType=BIGINT},
+      MAJOR_NAME = #{majorName,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=TINYINT},
+      YEAR = #{year,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATED = #{created,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <!--条件查询-->
+  <sql id="QUERY_WHERE_CLAUSE_CONDITION">
+    <where>
+      <if test="ID != null and ID != ''"><![CDATA[AND `ID` = #{id}]]></if>
+      <!-- 增加多条件 -->
+      <if test="studentRegion != null and studentRegion != ''"><![CDATA[AND `STUDENT_REGION` = #{studentRegion}]]></if>
+      <if test="universityId != null and universityId != ''"> <![CDATA[AND UNIVERSITY_ID =#{universityId}]]></if>
+      <if test="TYPE != null and TYPE != ''"><![CDATA[AND `TYPE` =#{type} ]]></if>
+      <if test="universityRegionId != null and universityRegionId != ''"><![CDATA[AND `UNIVERSITY_REGION_ID` = #{universityRegionId}]]></if>
+
+      <!-- -->
+      <if test="majorId != null and majorId != ''"><![CDATA[AND `MAJOR_ID` = #{majorId}]]></if>
+      <if test="score !=null and score !='' ">
+        <![CDATA[
+            AND
+            SCORE <= #{score}
+        ]]>
+      </if>
+      <if test="YEAR !=null ">
+        and YEAR =#{year}
+      </if>
+    </where>
+  </sql>
+</mapper>

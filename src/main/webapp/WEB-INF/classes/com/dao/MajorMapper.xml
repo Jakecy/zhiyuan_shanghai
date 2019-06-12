@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.MajorMapper" >
+  <resultMap id="BaseResultMap" type="com.model.Major" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MAJOR_NUM" property="majorNum" jdbcType="VARCHAR" />
+    <result column="MAJOR_NAME" property="majorName" jdbcType="VARCHAR" />
+    <result column="BRIEF_DESC" property="briefDesc" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED" property="created" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED" property="updated" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MAJOR_NUM, MAJOR_NAME, BRIEF_DESC, CREATE_TIME, CREATED, UPDATE_TIME, UPDATED
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from major
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <!--查询专业列表-->
+  <select id="selectMajorList"  resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from major
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from major
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.model.Major" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into major (MAJOR_NUM, MAJOR_NAME, BRIEF_DESC, 
+      CREATE_TIME, CREATED, UPDATE_TIME, 
+      UPDATED)
+    values (#{majorNum,jdbcType=VARCHAR}, #{majorName,jdbcType=VARCHAR}, #{briefDesc,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{created,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updated,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.Major" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into major
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="majorNum != null" >
+        MAJOR_NUM,
+      </if>
+      <if test="majorName != null" >
+        MAJOR_NAME,
+      </if>
+      <if test="briefDesc != null" >
+        BRIEF_DESC,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="updated != null" >
+        UPDATED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="majorNum != null" >
+        #{majorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="majorName != null" >
+        #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="briefDesc != null" >
+        #{briefDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.Major" >
+    update major
+    <set >
+      <if test="majorNum != null" >
+        MAJOR_NUM = #{majorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="majorName != null" >
+        MAJOR_NAME = #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="briefDesc != null" >
+        BRIEF_DESC = #{briefDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        UPDATED = #{updated,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.Major" >
+    update major
+    set MAJOR_NUM = #{majorNum,jdbcType=VARCHAR},
+      MAJOR_NAME = #{majorName,jdbcType=VARCHAR},
+      BRIEF_DESC = #{briefDesc,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATED = #{created,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

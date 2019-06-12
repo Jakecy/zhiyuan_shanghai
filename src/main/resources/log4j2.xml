@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <!--定义全局变量-->
+    <!--      <properties>
+                <property name="LOG_HOME">/data/logs/perfume</property>
+                <property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss,SSS} %-5level [%c{1.}] %C{1}  %m%n</property>
+            </properties>-->
+    <Appenders>
+        <!--配置向控制台的输出-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+        <!--配置动态日志文件-->
+         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="serverError" fileName="/data/logs/backend/serverError.log"
+                     filePattern="/data/logs/backend/serverError_%d{yyyy-MM-dd}_%i.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT"
+                             onMismatch="DENY"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %m%n"/>
+            <!--配置日志文件的归档策略,这里配置为按大小归档，当日志文件超过100M时开始归档-->
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!--默认的覆盖策略-->
+            <!--DefaultRolloverStrategy-->
+            <DefaultRolloverStrategy max="9999"/>
+        </RollingFile>
+        <Async name="serverErrorAsync" bufferSize="262144">
+            <AppenderRef ref="serverError"/>
+        </Async>
+
+        <!--增加webSocket的日志-->
+        <RollingFile name="webSocketLog" fileName="/data/logs/backend/webSocketLog.log"
+                     filePattern="/data/logs/backend/webSocketLog_%d{yyyy-MM-dd}_%i.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT"
+                             onMismatch="DENY"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %m%n"/>
+            <!--配置日志文件的归档策略,这里配置为按大小归档，当日志文件超过100M时开始归档-->
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <!--默认的覆盖策略-->
+            <!--DefaultRolloverStrategy-->
+            <DefaultRolloverStrategy max="99"/>
+        </RollingFile>
+
+        <RollingFile name="serverLog" fileName="/data/logs/backend/serverLog.log"
+                     filePattern="/data/logs/backend/serverLog_%d{yyyy-MM-dd}_%i.log">
+            <ThresholdFilter level="info" onMatch="ACCEPT"
+                             onMismatch="DENY"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %m%n"/>
+            <!--配置日志文件的归档策略,这里配置为按大小归档，当日志文件超过100M时开始归档-->
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <!--默认的覆盖策略-->
+            <!--DefaultRolloverStrategy-->
+            <DefaultRolloverStrategy max="99"/>
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <!--     <Root level="info">
+                    <AppenderRef ref="RollingFile" />
+                </Root>-->
+        <Logger name="serverError" level="ERROR">
+            <AppenderRef ref="serverErrorAsync"/>
+        </Logger>
+        <Logger name="webSocketLog" level="INFO">
+
+            <AppenderRef ref="webSocketLog"/>
+        </Logger>
+
+        <Logger name="serverLog" level="INFO">
+
+            <AppenderRef ref="serverLog"/>
+        </Logger>
+
+    </Loggers>
+</Configuration>

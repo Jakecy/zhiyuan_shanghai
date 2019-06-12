@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.UniversityMapper" >
+  <resultMap id="BaseResultMap" type="com.model.University" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="UNIVERSITY_NUM" property="universityNum" jdbcType="VARCHAR" />
+    <result column="UNIVERSITY_NAME" property="universityName" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="TINYINT" />
+    <result column="REGION_ID" property="regionId" jdbcType="BIGINT" />
+    <result column="DETAIL_ADDRESS" property="detailAddress" jdbcType="VARCHAR" />
+    <result column="HOTLINE" property="hotline" jdbcType="VARCHAR" />
+    <result column="GATE_PHOTO" property="gatePhoto" jdbcType="VARCHAR" />
+    <result column="BRIEF_DESC" property="briefDesc" jdbcType="VARCHAR" />
+    <result column="SCALE" property="scale" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATED" property="created" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED" property="updated" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, UNIVERSITY_NUM, UNIVERSITY_NAME, TYPE, REGION_ID, DETAIL_ADDRESS, HOTLINE, GATE_PHOTO, 
+    BRIEF_DESC, SCALE, CREATE_TIME, CREATED, UPDATE_TIME, UPDATED
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from university
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectUniversityList"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from university
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from university
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.model.University" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into university (UNIVERSITY_NUM, UNIVERSITY_NAME, TYPE, 
+      REGION_ID, DETAIL_ADDRESS, HOTLINE, 
+      GATE_PHOTO, BRIEF_DESC, SCALE, 
+      CREATE_TIME, CREATED, UPDATE_TIME, 
+      UPDATED)
+    values (#{universityNum,jdbcType=VARCHAR}, #{universityName,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, 
+      #{regionId,jdbcType=BIGINT}, #{detailAddress,jdbcType=VARCHAR}, #{hotline,jdbcType=VARCHAR}, 
+      #{gatePhoto,jdbcType=VARCHAR}, #{briefDesc,jdbcType=VARCHAR}, #{scale,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{created,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updated,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.University" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into university
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="universityNum != null" >
+        UNIVERSITY_NUM,
+      </if>
+      <if test="universityName != null" >
+        UNIVERSITY_NAME,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+      <if test="regionId != null" >
+        REGION_ID,
+      </if>
+      <if test="detailAddress != null" >
+        DETAIL_ADDRESS,
+      </if>
+      <if test="hotline != null" >
+        HOTLINE,
+      </if>
+      <if test="gatePhoto != null" >
+        GATE_PHOTO,
+      </if>
+      <if test="briefDesc != null" >
+        BRIEF_DESC,
+      </if>
+      <if test="scale != null" >
+        SCALE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="updated != null" >
+        UPDATED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="universityNum != null" >
+        #{universityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="universityName != null" >
+        #{universityName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="regionId != null" >
+        #{regionId,jdbcType=BIGINT},
+      </if>
+      <if test="detailAddress != null" >
+        #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hotline != null" >
+        #{hotline,jdbcType=VARCHAR},
+      </if>
+      <if test="gatePhoto != null" >
+        #{gatePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="briefDesc != null" >
+        #{briefDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="scale != null" >
+        #{scale,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.University" >
+    update university
+    <set >
+      <if test="universityNum != null" >
+        UNIVERSITY_NUM = #{universityNum,jdbcType=VARCHAR},
+      </if>
+      <if test="universityName != null" >
+        UNIVERSITY_NAME = #{universityName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="regionId != null" >
+        REGION_ID = #{regionId,jdbcType=BIGINT},
+      </if>
+      <if test="detailAddress != null" >
+        DETAIL_ADDRESS = #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hotline != null" >
+        HOTLINE = #{hotline,jdbcType=VARCHAR},
+      </if>
+      <if test="gatePhoto != null" >
+        GATE_PHOTO = #{gatePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="briefDesc != null" >
+        BRIEF_DESC = #{briefDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="scale != null" >
+        SCALE = #{scale,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        UPDATED = #{updated,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.University" >
+    update university
+    set UNIVERSITY_NUM = #{universityNum,jdbcType=VARCHAR},
+      UNIVERSITY_NAME = #{universityName,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=TINYINT},
+      REGION_ID = #{regionId,jdbcType=BIGINT},
+      DETAIL_ADDRESS = #{detailAddress,jdbcType=VARCHAR},
+      HOTLINE = #{hotline,jdbcType=VARCHAR},
+      GATE_PHOTO = #{gatePhoto,jdbcType=VARCHAR},
+      BRIEF_DESC = #{briefDesc,jdbcType=VARCHAR},
+      SCALE = #{scale,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATED = #{created,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
